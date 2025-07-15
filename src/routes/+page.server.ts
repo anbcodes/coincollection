@@ -19,11 +19,13 @@ export const actions = {
       throw new Error('ID is required');
     }
     // Delete the image file associated with the coin if it exists
-    const coin = db.prepare('SELECT image FROM coins WHERE id = ?').get(id) as Coin | undefined;
-    if (coin && coin.image) {
-      const imagePath = `data/images/${coin.image}`;
+    const coin = db.prepare('SELECT imagef, imageb FROM coins WHERE id = ?').get(id) as Coin | undefined;
+    if (coin) {
+      const imagePathF = `data/images/${coin.imagef}`;
+      const imagePathB = `data/images/${coin.imageb}`;
       try {
-        await unlink(imagePath); // Delete the image file
+        await unlink(imagePathF); // Delete the image file
+        await unlink(imagePathB); // Delete the image file
       } catch (error) {
         console.error(`Failed to delete image file: ${error}`);
       }
